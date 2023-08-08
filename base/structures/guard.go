@@ -11,12 +11,12 @@ const DefaultGuardPeriod = 50 * time.Millisecond
 
 var curGuardPeriod = DefaultGuardPeriod
 
-func Alive() bool {
+func GuardAlive() bool {
 	return guardAlive
 }
 
 func GuardFreqList(f *freqLink) {
-	if Alive() {
+	if GuardAlive() {
 		return
 	}
 	go guard(f)

@@ -6,7 +6,23 @@ type freqLink struct {
 	tail FreqNode
 }
 
+func (f *freqLink) Init() {
+	if f == nil {
+		return
+	}
+	f.head.Mutex.Lock()
+	f.tail.Mutex.Lock()
+	f.head.next = &f.tail
+	f.tail.prev = &f.head
+	f.head.Mutex.Unlock()
+	f.tail.Mutex.Unlock()
+}
+
 func (f *freqLink) EmptyFreqLink() bool {
+	f.head.Mutex.RLock()
+	f.tail.Mutex.RLock()
+	defer f.head.Mutex.RUnlock()
+	defer f.head.Mutex.RUnlock()
 	if f.head.Prev() == nil &&
 		f.tail.Prev() == nil {
 		return true
