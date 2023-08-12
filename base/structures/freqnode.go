@@ -2,15 +2,15 @@
 package structures
 
 import (
-	"github.com/daidai53/freqdata_cache_demo/base/public"
+	"github.com/daidai53/freqdata_cache_demo/public"
 	"sync"
 	"time"
 )
 
 type FreqNode struct {
-	userId       interface{}
+	userId       any
 	dataType     public.FreqDataType
-	data         interface{}
+	data         any
 	period       time.Duration // at least 200ms, too small is nonsense.
 	lastScanTime time.Duration
 	remain       uint32
@@ -62,4 +62,12 @@ func (f *FreqNode) expire() {
 	//todo:delete from Hash with Key:userId
 	prev.next = next
 	next.prev = prev
+}
+
+func (f *FreqNode) ReadData() interface{} {
+	f.Mutex.Lock()
+	data := f.data
+	f.remain++
+	f.Mutex.Unlock()
+	return data
 }
